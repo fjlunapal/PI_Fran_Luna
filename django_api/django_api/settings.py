@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d3arrjuq-09#-7tnqrz8qujfp&1=k90s($oymh#)#ac-*c8l9f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -36,9 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',   
+    'django.contrib.staticfiles',
     'api',
-    'rest_framework', 
+    'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
     'rest_auth.registration',
@@ -60,12 +60,6 @@ AUTHENTICATION_BACKENDS = (
    "django.contrib.auth.backends.ModelBackend",
    "allauth.account.auth_backends.AuthenticationBackend"
 )
-
-REST_FRAMEWORK = {
-  'DEFAULT_PERMISSION_CLASSES': [                     
-    'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-  ],
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -97,6 +91,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_api.wsgi.application'
 
+REST_FRAMEWORK = {
+  'DEFAULT_PERMISSION_CLASSES': [                     
+    'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+  ],
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases

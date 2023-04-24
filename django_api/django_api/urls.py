@@ -20,6 +20,7 @@ from api import views
 from rest_framework import routers
 
 router = routers.DefaultRouter()
+
 # En el router vamos añadiendo los endpoints a los viewsets
 router.register('productos', views.ProductoViewSet)
 router.register('usuarios', views.UsuarioViewSet)
