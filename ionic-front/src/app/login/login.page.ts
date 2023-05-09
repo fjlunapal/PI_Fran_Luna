@@ -7,6 +7,7 @@ import {
   Form,
 } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ import { AlertController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  constructor(public fb: FormBuilder, public alertController: AlertController) {
+  constructor(public fb: FormBuilder, public alertController: AlertController, public authService: AuthService) {
     this.loginForm = this.fb.group({
       email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -38,10 +39,6 @@ export class LoginPage implements OnInit {
       await alert.present();
       return;
     }
-    var user = {
-      email: f.email,
-      password: f.password,
-    };
-    console.log('DATOS USUARIO LOGIN', f);
+    this.authService.login(f.email, f.password);
   }
 }

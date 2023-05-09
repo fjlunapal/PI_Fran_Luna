@@ -1,7 +1,7 @@
 """django_api URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.1/topics/http/urls/
+    https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
 Function views
     1. Add an import:  from my_app import views
@@ -16,23 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-from api import views
-from rest_framework import routers
-
-router = routers.DefaultRouter()
-
-# En el router vamos añadiendo los endpoints a los viewsets
-router.register('productos', views.ProductoViewSet)
-router.register('usuarios', views.UserViewSet)
-router.register('carritos', views.CarritoViewSet)
-router.register('pedidos', views.PedidoViewSet)
-router.register('comentarios', views.ComentarioViewSet)
-router.register('valoraciones', views.ValoracionViewSet)
-
 urlpatterns = [
-    path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('auth/', include('rest_auth.urls')),
-    path('auth/registration/', include('rest_auth.registration.urls')),
-    path('accounts/', include('allauth.urls')),
+    path('api/', include('api.urls', namespace='api')),
 ]

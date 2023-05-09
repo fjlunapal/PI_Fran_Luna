@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = '127.0.0.1:8000';
+  apiUrl = 'http://127.0.0.1:8000/api/';
 
   constructor(private http: HttpClient) {}
 
@@ -30,12 +30,14 @@ export class AuthService {
 
   //Metodo de login mediante una promesa que se manda a la api para los usuarios que se logueen en la app
   login(email: string, password: string) {
+    
     var user = {
-      email: email,
+      username: email,
       password: password,
     };
+    console.log(user);
     // console.log('DATOS USUARIO LOGIN', user)
-    return fetch(this.apiUrl + '/login', {
+    return fetch(this.apiUrl + 'user/login', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
