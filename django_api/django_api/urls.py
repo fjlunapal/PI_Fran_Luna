@@ -23,7 +23,7 @@ router = routers.DefaultRouter()
 
 # En el router vamos añadiendo los endpoints a los viewsets
 router.register('productos', views.ProductoViewSet)
-router.register('usuarios', views.UsuarioViewSet)
+router.register('usuarios', views.UserViewSet)
 router.register('carritos', views.CarritoViewSet)
 router.register('pedidos', views.PedidoViewSet)
 router.register('comentarios', views.ComentarioViewSet)

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
+
 
 @Component({
   selector: 'app-register',
@@ -11,11 +13,12 @@ export class RegisterPage implements OnInit {
   registerForm: FormGroup;
 
   constructor(public fb: FormBuilder,
-    public alertController: AlertController) { 
+    public alertController: AlertController,
+    public auth: AuthService) { 
     this.registerForm = this.fb.group({
       email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
-      confirmPassword: new FormControl('', Validators.required)
+      password2: new FormControl('', Validators.required)
     });
   }
 
@@ -23,8 +26,6 @@ export class RegisterPage implements OnInit {
   }
 
   async registration() {
-    var f = this.registerForm.value;
-
     if(this.registerForm.invalid) {
       const alert = await this.alertController.create({
         header: 'Datos incompletos',
@@ -35,13 +36,7 @@ export class RegisterPage implements OnInit {
       await alert.present();
       return;
       }
-
-      var user = {
-        email: f.email,
-        password: f.password
-      }
-      console.log('DATOS USUARIO REGISTRO', f);
-
-      // localStorage.setItem('user', JSON.stringify(user));
+      console.log('datos enviados', this.registerForm.value)
+      this.auth.register(this.registerForm.value['email'], this.registerForm.value['password'], this.registerForm.value['password2']);
     }
   }

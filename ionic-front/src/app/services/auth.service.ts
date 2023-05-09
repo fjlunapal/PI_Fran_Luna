@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root',
@@ -6,24 +7,26 @@ import { Injectable } from '@angular/core';
 export class AuthService {
   apiUrl = '127.0.0.1:8000';
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   //Metodo de registro mediante una promesa que se manda a la api para los usuarios que se registren en la app
-  register(email: string, password: string, confirmPassword: string) {
-    //user array that contains the data to parse to json
-    var user = {
-      email: email,
-      password: password,
-      confirmPassword: confirmPassword,
+  register(email: string, password: string, password2: string) {
+    const url = this.apiUrl + '/auth/registration';
+    const data = {
+      email,
+      password,
+      password2
     };
-    return fetch(this.apiUrl + '/auth/registration', {
-      method: 'POST',
-      body: JSON.stringify(user),
-      headers: {
+    console.log(data);
+    const httpOptions = {
+      headers: new HttpHeaders({
         'Content-Type': 'application/json',
-      },
-    }).then((res) => res.json());
+        'Allow': 'POST, OPTIONS'
+      })
+    };
+    return this.http.post(url, data, httpOptions);
   }
+  
 
   //Metodo de login mediante una promesa que se manda a la api para los usuarios que se logueen en la app
   login(email: string, password: string) {
@@ -38,7 +41,10 @@ export class AuthService {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then((res) => res.json());
+    }).then((res) => {
+      res.json();
+      console.log(res);
+    });
     
   }
 }

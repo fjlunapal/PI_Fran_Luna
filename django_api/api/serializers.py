@@ -6,10 +6,10 @@ class ProductoSerializer(serializers.ModelSerializer):
         model = Producto
         fields = '__all__'
 
-class UsuarioSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Usuario
-        fields = '__all__'
+        model = User
+        fields = ('email', 'password')
 
 class CarritoSerializer(serializers.ModelSerializer):
     class Meta:
