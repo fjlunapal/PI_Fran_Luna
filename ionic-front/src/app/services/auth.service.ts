@@ -19,6 +19,7 @@ export class AuthService {
     };
     console.log(data);
     const httpOptions = {
+      mode: 'no-cors',
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
         'Allow': 'POST, OPTIONS'

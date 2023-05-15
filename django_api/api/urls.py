@@ -6,4 +6,5 @@ app_name = 'api'
 urlpatterns = [
     path('producto', Producto_APIView.as_view()),
     path('user/login', UserViewSet.as_view({'post': 'login'})),
+    path('user/register', UserViewSet.as_view({'post': 'register'})),
 ]

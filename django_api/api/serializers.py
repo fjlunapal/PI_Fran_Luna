@@ -4,6 +4,8 @@ from rest_framework import serializers
 from django.contrib.auth import password_validation, authenticate
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework.validators import UniqueValidator
+
 
 # Login de usuarios
 class UserModelSerializer(serializers.ModelSerializer):
@@ -37,6 +39,24 @@ class UserLoginSerializer(serializers.Serializer):
         """Generar o recuperar token."""
         token, created = Token.objects.get_or_create(user=self.context['user'])
         return self.context['user'], token.key
+    
+class UserSignUpSerializer(serializers.Serializer):
+
+    email = serializers.EmailField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        min_length=4,
+        max_length=20,
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    password = serializers.CharField(min_length=8, max_length=64)
+
+    def create(self, data):
+        user = User.objects.create_user(**data)
+        return user
+
 
 # Serializers 
 
