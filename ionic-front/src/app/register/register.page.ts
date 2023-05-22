@@ -17,8 +17,8 @@ export class RegisterPage implements OnInit {
     public auth: AuthService) { 
     this.registerForm = this.fb.group({
       email: new FormControl('', Validators.required),
-      password: new FormControl('', Validators.required),
-      password2: new FormControl('', Validators.required)
+      user: new FormControl('', Validators.required),
+      password: new FormControl('', Validators.required)
     });
   }
 
@@ -26,17 +26,19 @@ export class RegisterPage implements OnInit {
   }
 
   async registration() {
-    if(this.registerForm.invalid) {
-      const alert = await this.alertController.create({
-        header: 'Datos incompletos',
-        message: 'Por favor rellena todos los campos',
-        buttons: ['Aceptar']
-      });
+    var f = this.registerForm.value;
 
-      await alert.present();
-      return;
-      }
+    // if(this.registerForm.invalid) {
+    //   const alert = await this.alertController.create({
+    //     header: 'Datos incompletos',
+    //     message: 'Por favor rellena todos los campos',
+    //     buttons: ['Aceptar']
+    //   });
+
+    //   await alert.present();
+    //   return;
+    //   }
       console.log('datos enviados', this.registerForm.value)
-      this.auth.register(this.registerForm.value['email'], this.registerForm.value['password'], this.registerForm.value['password2']);
+      this.auth.register(f.email, f.user, f.password);
     }
   }

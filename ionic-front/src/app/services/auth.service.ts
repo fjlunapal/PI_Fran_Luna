@@ -5,27 +5,30 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
   providedIn: 'root',
 })
 export class AuthService {
-  apiUrl = 'http://127.0.0.1:8000/api/';
+  apiUrl = 'https://api-marruzella.herokuapp.com/api/';
 
   constructor(private http: HttpClient) {}
 
   //Metodo de registro mediante una promesa que se manda a la api para los usuarios que se registren en la app
-  register(email: string, password: string, password2: string) {
-    const url = this.apiUrl + '/auth/registration';
-    const data = {
-      email,
-      password,
-      password2
+  register(email: string, user: string, password: string) {
+    const url = this.apiUrl + '/user/register';
+    var newUser = {
+      email: email,
+      user: user,
+      password: password
     };
-    console.log(data);
-    const httpOptions = {
-      mode: 'no-cors',
-      headers: new HttpHeaders({
+    console.log(newUser);
+    return fetch(this.apiUrl + 'user/register', {
+      method: 'POST',
+      body: JSON.stringify(newUser),
+      headers: {
         'Content-Type': 'application/json',
-        'Allow': 'POST, OPTIONS'
-      })
-    };
-    return this.http.post(url, data, httpOptions);
+      },
+    }).then((res) => {
+      res.json();
+      console.log(res);
+    });
+    
   }
   
 
