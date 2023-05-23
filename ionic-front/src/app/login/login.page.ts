@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
-  constructor(public fb: FormBuilder, public alertController: AlertController, public authService: AuthService) {
+  constructor(public fb: FormBuilder, public alertController: AlertController, public authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
       email: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required),
@@ -29,16 +30,14 @@ export class LoginPage implements OnInit {
   async login() {
     var f = this.loginForm.value;
 
-    if (this.loginForm.invalid) {
-      const alert = await this.alertController.create({
-        header: 'Datos incompletos',
-        message: 'Por favor rellena todos los campos',
-        buttons: ['Aceptar'],
+      console.log('datos enviados', this.loginForm.value);
+      this.authService.login(f.email, f.password).then(f => {
+        if(this.loginForm.invalid){
+          console.log('datos enviados', this.loginForm.value);
+        }
+        else{
+          this.router.navigate(['/tab1']);
+        }
       });
-
-      await alert.present();
-      return;
-    }
-    this.authService.login(f.email, f.password);
   }
 }

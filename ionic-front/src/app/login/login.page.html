@@ -7,26 +7,21 @@
 <ion-content [fullscreen]="true">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Login</ion-card-title>
+      <ion-card-title>Inicia sesion con tus datos!</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="loginForm">
         <ion-item>
-          <ion-label position="floating>">Email</ion-label>
+          <ion-label position="floating">Usuario</ion-label>
           <ion-input type="text" formControlName="email"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating>">Password</ion-label>
+          <ion-label position="floating">Contraseña</ion-label>
           <ion-input type="password" formControlName="password"></ion-input>
         </ion-item>
+        <ion-button (click)="login()" expand="full">Login</ion-button>
       </form>
-      <ion-button (click)="login()">
-        Login
-      </ion-button>
-        <ion-button>
-          <ion-button [routerLink]="['/register'] ">Register</ion-button>
-        </ion-button>
+      <ion-button [routerLink]="['/register']" expand="full" color="secondary">Register</ion-button>
     </ion-card-content>
   </ion-card>
-
 </ion-content>

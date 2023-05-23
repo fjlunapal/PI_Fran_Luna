@@ -1,5 +1,6 @@
 <ion-header>
   <ion-toolbar color="primary">
+    <ion-title>Registro</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -9,28 +10,26 @@
 <ion-content [fullscreen]="true">
   <ion-card>
     <ion-card-header>
-      <ion-card-title>Register</ion-card-title>
+      <ion-card-title>Registrate con tus datos!</ion-card-title>
     </ion-card-header>
     <ion-card-content>
       <form [formGroup]="registerForm">
         <ion-item>
-          <ion-label position="floating>">Email</ion-label>
+          <ion-label position="floating">Email</ion-label>
           <ion-input type="text" formControlName="email"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating>">User</ion-label>
+          <ion-label position="floating">Usuario</ion-label>
           <ion-input formControlName="user"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label position="floating>">Password</ion-label>
+          <ion-label position="floating">Contraseña</ion-label>
           <ion-input type="password" formControlName="password"></ion-input>
         </ion-item>
       </form>
-      <ion-button (click)="registration()">
-        Register
+      <ion-button (click)="registration()" expand="full">
+        Registrarse
       </ion-button>
     </ion-card-content>
   </ion-card>
 </ion-content>
-
-
