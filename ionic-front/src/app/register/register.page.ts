@@ -73,7 +73,7 @@ export class RegisterPage implements OnInit {
     async errorAlert() {
       const alert = await this.alertController.create({
       header: 'Error',
-      message: 'Alguno de los campos son inválidos, por favor rellenelos de nuevo.',
+      message: 'Los datos son incorrectos o el usuario ya está registrado.',
       buttons: ['Aceptar']
       });
 

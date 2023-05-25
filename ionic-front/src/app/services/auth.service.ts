@@ -8,6 +8,7 @@ import { AlertController } from '@ionic/angular';
 export class AuthService {
   apiUrl = 'https://api-marruzella.herokuapp.com/api/';
   alertController: any;
+  token: any;
   constructor(private http: HttpClient, public alert: AlertController) {}
 
   //Metodo de registro mediante una promesa que se manda a la api para los usuarios que se registren en la app
@@ -34,7 +35,6 @@ export class AuthService {
         throw new Error('Error de registro. Comprueba que los datos introducidos son correctos.');
       }
     }).catch((error) => {
-      this.invalidRegisterAlert();
       console.error(error);
       throw error;
     });
@@ -59,6 +59,7 @@ export class AuthService {
     })
       .then((res) => {
         if (res.ok) {
+          console.log(res);
           return res.json();
         } else {
           throw new Error('Error de inicio de sesión. Comprueba que los datos introducidos son correctos.');
@@ -74,7 +75,7 @@ export class AuthService {
   async invalidLoginAlert() {
     const alert = await this.alert.create({
       header: 'Error',
-      message: 'Email o contraseña incorrectos',
+      message: 'Usuario o contraseña incorrectos',
       buttons: [
         {
           text: 'Ok',
@@ -85,17 +86,6 @@ export class AuthService {
       ]
     });
     await alert.present();
-  }
-
-  async invalidRegisterAlert() {
-      const alert = await this.alertController.create({
-        header: 'Error',
-        message: 'Los datos son incorrectos o el usuario ya está registrado',
-        buttons: ['Aceptar']
-      });
-
-      await alert.present();
-      return;
   }
 
 }

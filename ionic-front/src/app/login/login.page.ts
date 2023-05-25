@@ -31,13 +31,16 @@ export class LoginPage implements OnInit {
     var f = this.loginForm.value;
 
       console.log('datos enviados', this.loginForm.value);
-      this.authService.login(f.email, f.password).then(f => {
+      this.authService.login(f.email, f.password).then(f => {+
+        console.log(f);
         if(this.loginForm.invalid){
           console.log('datos enviados', this.loginForm.value);
         }
         else{
-          this.router.navigate(['/tab1']);
+          localStorage.setItem('token', f.access_token);
+          this.router.navigate(['/tabs']);
         }
       });
   }
+  
 }
