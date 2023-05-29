@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
+import { Producto } from '../services/interfaces/Producto';
 
 @Component({
   selector: 'app-tab1',
@@ -19,6 +20,12 @@ export class Tab1Page {
     }
     )
   }
+
+  async addProductoCarrito(producto: Producto) {
+    await this.dataService.addProductoCarrito(producto);
+    console.log(this.dataService.productosCarrito);
+  }
+
   
   async cerrarSesion() {
     localStorage.removeItem('token');
