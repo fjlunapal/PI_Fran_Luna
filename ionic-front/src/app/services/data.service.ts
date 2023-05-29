@@ -37,37 +37,26 @@ export class DataService {
 
   //Metodo para almacenar en un array varios productoCarrito
   addProductoCarrito(producto: Producto) {
-    const productoCarrito =  producto;
+    var prod =  producto;
   
-    this.productosCarrito.push(productoCarrito);
+    this.productosCarrito.push(prod);
   }
+  
+  //Metodo para borrar un producto
+  deleteProductoCarrito(producto: Producto) {
+    var prod = producto;
+    for (var i = 0; i < this.productosCarrito.length; i++) {
+      if (this.productosCarrito[i].id === prod.id) {
+        this.productosCarrito.splice(i, 1);
+        break; // Sale del bucle después de borrar el producto
+      }
+    }
+  }
+  
 
   getProductoCarrito(){
     return this.productosCarrito;
   }
 
-  // //Metodo para añadir productosCarrito a un carrito
-  // addCarrito() {
-  //   return fetch(this.apiUrl + 'carrito', {
-  //     method: 'POST',
-  //     body: JSON.stringify(this.productosCarrito),
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: 'Token ' + localStorage.getItem('token'),
-  //     },
-  //   })
-  //     .then((res) => {
-  //       if (res.ok) {
-  //         this.productosCarrito = [];
-  //         return res.json();
-  //       } else {
-  //         throw new Error('Error al añadir el producto');
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       throw error;
-  //     });
-  // }
 
 }

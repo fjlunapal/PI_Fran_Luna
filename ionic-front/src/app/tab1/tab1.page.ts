@@ -23,12 +23,14 @@ export class Tab1Page {
 
   async addProductoCarrito(producto: Producto) {
     await this.dataService.addProductoCarrito(producto);
-    console.log(this.dataService.productosCarrito);
+    console.log('producto almacenado', producto);
+    console.log('productos almacenados', this.dataService.productosCarrito);
   }
 
   
   async cerrarSesion() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
+    this.dataService.productosCarrito = [];
   }
 }
