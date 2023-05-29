@@ -11,7 +11,7 @@ export class DataService {
 
   constructor(private http: HttpClient, public alert: AlertController) {}
 
-  productosCarrito: any[] = [];
+  productosCarrito: Producto[] = [];
 
   //Metodo para hacer un get a la api de los productos
   getProducts() {
@@ -37,12 +37,13 @@ export class DataService {
 
   //Metodo para almacenar en un array varios productoCarrito
   addProductoCarrito(producto: Producto) {
-    const productoCarrito = {
-      producto: producto,
-      cantidad: 1,
-    };
+    const productoCarrito =  producto;
   
     this.productosCarrito.push(productoCarrito);
+  }
+
+  getProductoCarrito(){
+    return this.productosCarrito;
   }
 
   // //Metodo para añadir productosCarrito a un carrito
