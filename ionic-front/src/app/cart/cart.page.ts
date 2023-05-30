@@ -12,7 +12,7 @@ export class CartPage implements OnInit {
   constructor(private router: Router, public dataService: DataService) {}
   products: any;
   showCart: any[] = [];
-
+  finalCart: any[] = [];
   ngOnInit() {
     console.log('productos pagina carrito', this.dataService.productosCarrito);
     this.showCart = this.calculateSameProducts();
@@ -42,8 +42,12 @@ export class CartPage implements OnInit {
         groupedCart.push(groupedProducts[key]);
       }
     }
-
+    this.finalCart=groupedCart;
     return groupedCart;
+  }
+
+  public createOrder(){
+    console.log('create order', this.finalCart);
   }
 
   addProduct(producto: Producto) {

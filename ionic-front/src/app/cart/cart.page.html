@@ -7,35 +7,41 @@
     </ion-buttons>
     <ion-title class="ion-text-center">MARRUZELLA</ion-title>
     <ion-buttons slot="end">
-      <ion-button>
-        <!-- confirmacion de pedido -->
-        <ion-icon name="bag-check-outline"></ion-icon>
-      </ion-button>
+      <ion-button (click)="createOrder()">
+        <ion-icon name="bag-check-outline"></ion-icon> 
+    </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content [fullscreen]="true">
-  <ng-container *ngFor="let product of showCart">
-    <ion-card>
-      <img alt="test" src="{{ product.imagen }}" />
-      <ion-card-header>
-        <ion-card-title>{{ product.nombre }}</ion-card-title>
-        <ion-card-subtitle class="price"
-          >{{ product.precioTotal }} €</ion-card-subtitle
-        >
-        <div class="button-group">
-          <ion-button (click)="deleteProduct(product)">
-            <ion-icon name="close-circle-outline"></ion-icon>
-          </ion-button>
-          <ion-button (click)="addProduct(product)">
-            <ion-icon name="add-circle-outline"></ion-icon>
-          </ion-button>
-        </div>
-        <div class="product-count">
-          <span class="count">{{ product.cantidad }}</span> producto(s)
-        </div>
-      </ion-card-header>
-    </ion-card>
+  <ng-container *ngIf="showCart.length > 0; else emptyCart">
+    <ng-container *ngFor="let product of showCart">
+      <ion-card>
+        <img alt="test" src="{{ product.imagen }}" />
+        <ion-card-header>
+          <ion-card-title>{{ product.nombre }}</ion-card-title>
+          <ion-card-subtitle class="price">{{ product.precioTotal }} €</ion-card-subtitle>
+          <div class="button-group">
+            <ion-button (click)="deleteProduct(product)">
+              <ion-icon name="close-circle-outline"></ion-icon>
+            </ion-button>
+            <ion-button (click)="addProduct(product)">
+              <ion-icon name="add-circle-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <div class="product-count">
+            <span class="count">{{ product.cantidad }}</span> producto(s)
+          </div>
+        </ion-card-header>
+      </ion-card>
+    </ng-container>
   </ng-container>
+
+  <ng-template #emptyCart>
+    <div class="empty-cart-message">
+      <p>Su carrito aún está vacío, añada productos para realizar un pedido!</p>
+    </div>
+  </ng-template>
 </ion-content>
+
+

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Router } from '@angular/router';
+import { Producto } from '../services/interfaces/Producto';
 
 @Component({
   selector: 'app-tab2',
@@ -36,5 +37,11 @@ export class Tab2Page {
     } else {
       this.filterProducts = [];
     }
+  }
+  
+  async addProductoCarrito(producto: Producto) {
+    await this.dataService.addProductoCarrito(producto);
+    console.log('producto almacenado', producto);
+    console.log('productos almacenados', this.dataService.productosCarrito);
   }
 }
