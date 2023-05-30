@@ -56,4 +56,31 @@ export class DataService {
   getProductoCarrito() {
     return this.productosCarrito;
   }
+
+  //Metodo para hacer un post a la api de los pedidos
+  postPedido() {
+
+  }
+
+  //metodo para hacer un get a la api de los pedidos
+  getPedidos() {
+    return fetch(this.apiUrl + 'pedido', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Token ' + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Error al cargar los pedidos');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error;
+      });
+  }
 }

@@ -46,8 +46,15 @@ export class CartPage implements OnInit {
     return groupedCart;
   }
 
+  //this method post the order to the api postPedido()
   public createOrder(){
-    console.log('create order', this.finalCart);
+    // Crear pedido(USUARIO)
+
+    //Crear productoCarrito(PEDIDO RELACIONADO, PRODUCTO, CANTIDAD)  LOS QUE NECESITEN EL PEDIDO
+
+    //Paga: put a pedido para ponerle pagado a true
+
+
   }
 
   addProduct(producto: Producto) {
