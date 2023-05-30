@@ -9,22 +9,59 @@ import { Producto } from '../services/interfaces/Producto';
   styleUrls: ['./cart.page.scss'],
 })
 export class CartPage implements OnInit {
-  constructor(private router: Router, public dataService: DataService) { }
+  constructor(private router: Router, public dataService: DataService) {}
   products: any;
-  showCart = this.dataService.productosCarrito;
+  showCart: any[] = [];
 
   ngOnInit() {
-      console.log('productos pagina carrito', this.dataService.productosCarrito); 
-    }
-
-  ngOnDestroy() {
-    this.products = null; // Borra la variable products al salir del componente
+    console.log('productos pagina carrito', this.dataService.productosCarrito);
+    this.showCart = this.calculateSameProducts();
   }
 
-  borrarProducto(producto: Producto) {
+  public calculateSameProducts(): any[] {
+    const groupedCart: any[] = [];
+    const groupedProducts: any = {};
+
+    // Agrupar productos por ID y calcular la suma de los precios
+    for (const product of this.dataService.productosCarrito) {
+      if (groupedProducts[product.id]) {
+        groupedProducts[product.id].cantidad++;
+        groupedProducts[product.id].precioTotal += product.precio;
+      } else {
+        groupedProducts[product.id] = {
+          ...product,
+          cantidad: 1,
+          precioTotal: product.precio,
+        };
+      }
+    }
+
+    // Crear un array con los productos agrupados
+    for (const key in groupedProducts) {
+      if (groupedProducts.hasOwnProperty(key)) {
+        groupedCart.push(groupedProducts[key]);
+      }
+    }
+
+    return groupedCart;
+  }
+
+  addProduct(producto: Producto) {
+    this.dataService.addProductoCarrito(producto);
+    this.showCart = this.calculateSameProducts();
+    this.updateCart();
+    console.log('after add', this.dataService.productosCarrito);
+  }
+
+  deleteProduct(producto: Producto) {
     this.dataService.deleteProductoCarrito(producto);
-    this.showCart = this.dataService.productosCarrito;
+    this.showCart = this.calculateSameProducts();
+    this.updateCart();
     console.log('after delete', this.dataService.productosCarrito);
+  }
+
+  updateCart() {
+    this.showCart = this.calculateSameProducts();
   }
 
   async cerrarSesion() {

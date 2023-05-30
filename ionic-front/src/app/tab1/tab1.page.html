@@ -7,7 +7,7 @@
     </ion-buttons>
     <ion-title class="ion-text-center">MARRUZELLA</ion-title>
     <ion-buttons slot="end">
-      <ion-button  [routerLink]="['/cart']">
+      <ion-button [routerLink]="['/cart']">
         <ion-icon name="cart-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,7 +15,7 @@
 </ion-header>
 <ion-content [fullscreen]="true">
   <ion-card *ngFor="let product of products">
-    <img alt="test" src="{{product.imagen}}"/>
+    <img alt="test" src="{{product.imagen}}" />
     <ion-card-header>
       <ion-card-title>{{product.nombre}}</ion-card-title>
       <ion-card-subtitle>{{product.descripcion}}</ion-card-subtitle>

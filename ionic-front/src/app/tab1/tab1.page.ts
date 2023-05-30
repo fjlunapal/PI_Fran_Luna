@@ -6,10 +6,9 @@ import { Producto } from '../services/interfaces/Producto';
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  styleUrls: ['tab1.page.scss'],
 })
 export class Tab1Page {
-
   constructor(public dataService: DataService, private router: Router) {}
   products: any;
 
@@ -17,8 +16,7 @@ export class Tab1Page {
     this.dataService.getProducts().then((products: any) => {
       this.products = products;
       console.log(this.products);
-    }
-    )
+    });
   }
 
   async addProductoCarrito(producto: Producto) {
@@ -27,7 +25,6 @@ export class Tab1Page {
     console.log('productos almacenados', this.dataService.productosCarrito);
   }
 
-  
   async cerrarSesion() {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);

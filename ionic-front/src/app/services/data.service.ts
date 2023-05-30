@@ -37,11 +37,11 @@ export class DataService {
 
   //Metodo para almacenar en un array varios productoCarrito
   addProductoCarrito(producto: Producto) {
-    var prod =  producto;
-  
+    var prod = producto;
+
     this.productosCarrito.push(prod);
   }
-  
+
   //Metodo para borrar un producto
   deleteProductoCarrito(producto: Producto) {
     var prod = producto;
@@ -52,11 +52,8 @@ export class DataService {
       }
     }
   }
-  
 
-  getProductoCarrito(){
+  getProductoCarrito() {
     return this.productosCarrito;
   }
-
-
 }
