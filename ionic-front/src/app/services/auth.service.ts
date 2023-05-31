@@ -9,6 +9,7 @@ export class AuthService {
   apiUrl = 'https://api-marruzella.herokuapp.com/api/';
   alertController: any;
   token: any;
+  userId: any;
   constructor(private http: HttpClient, public alert: AlertController) {}
 
   //Metodo de registro mediante una promesa que se manda a la api para los usuarios que se registren en la app
