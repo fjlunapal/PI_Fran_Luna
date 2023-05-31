@@ -12,7 +12,8 @@ export class CartPage implements OnInit {
   constructor(private router: Router, public dataService: DataService) {}
   products: any;
   showCart: any[] = [];
-  finalCart: any[] = [];
+  finalCart: Map<Producto, number> = new Map<Producto, number>();
+
   ngOnInit() {
     console.log('productos pagina carrito', this.dataService.productosCarrito);
     this.showCart = this.calculateSameProducts();
@@ -42,19 +43,20 @@ export class CartPage implements OnInit {
         groupedCart.push(groupedProducts[key]);
       }
     }
-    this.finalCart=groupedCart;
+
+    this.finalCart = new Map<Producto, number>(); // Reiniciar el mapa antes de actualizarlo
+
+    // Actualizar el mapa de productos finales
+    for (const product of groupedCart) {
+      this.finalCart.set(product.id, product);
+    }
+
     return groupedCart;
   }
 
-  //this method post the order to the api postPedido()
-  public createOrder(){
-    // Crear pedido(USUARIO)
-
-    //Crear productoCarrito(PEDIDO RELACIONADO, PRODUCTO, CANTIDAD)  LOS QUE NECESITEN EL PEDIDO
-
-    //Paga: put a pedido para ponerle pagado a true
-
-
+  public createOrder() {
+    this.dataService.createOrder(this.finalCart);
+    console.log('final cart', this.finalCart);
   }
 
   addProduct(producto: Producto) {
@@ -73,6 +75,14 @@ export class CartPage implements OnInit {
 
   updateCart() {
     this.showCart = this.calculateSameProducts();
+    this.updateFinalCart();
+  }
+
+  updateFinalCart() {
+    this.finalCart = new Map<Producto, number>();
+    for (const product of this.showCart) {
+      this.finalCart.set(product.id, product);
+    }
   }
 
   async cerrarSesion() {

@@ -8,10 +8,11 @@ import { Producto } from './interfaces/Producto';
 })
 export class DataService {
   apiUrl = 'https://api-marruzella.herokuapp.com/api/';
+  pedido: any;
+  productosPedido: any;
+  productosCarrito: Producto[] = [];
 
   constructor(private http: HttpClient, public alert: AlertController) {}
-
-  productosCarrito: Producto[] = [];
 
   //Metodo para hacer un get a la api de los productos
   getProducts() {
@@ -57,30 +58,28 @@ export class DataService {
     return this.productosCarrito;
   }
 
+  createOrder(productosCantidadMap: Map<Producto, number>) {
+    // Crear pedido en el que le pasamos el usuario actual
+    this.pedido = {
+      usuario: localStorage.getItem('id')
+    };
+    //Crear productoCarrito(PEDIDO RELACIONADO, PRODUCTO, CANTIDAD)  LOS QUE NECESITEN EL PEDIDO
+    this.productosCarrito.forEach((producto) => {
+      this.productosPedido = {
+        pedido: this.pedido.id,
+        producto: producto.id,
+        cantidad: productosCantidadMap.get(producto),
+      };
+    });
+    console.log('DATApedido', this.pedido);
+    console.log('DATAproductosPedido', this.productosPedido);
+    //Paga: put a pedido para ponerle pagado a true
+  }
+
+
+
+
+
   //Metodo para hacer un post a la api de los pedidos
-  postPedido() {
-
-  }
-
   //metodo para hacer un get a la api de los pedidos
-  getPedidos() {
-    return fetch(this.apiUrl + 'pedido', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Token ' + localStorage.getItem('token'),
-      },
-    })
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        } else {
-          throw new Error('Error al cargar los pedidos');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        throw error;
-      });
-  }
 }
