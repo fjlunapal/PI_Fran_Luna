@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
 import { Producto } from './interfaces/Producto';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +15,7 @@ export class DataService {
   productosCarrito: Producto[] = [];
   userId: any;
   totalPrice: number = 0;
-  constructor(private http: HttpClient, public alert: AlertController) {
+  constructor(private http: HttpClient, public alert: AlertController, private router: Router) {
     this.userId = localStorage.getItem('userId');
   }
 
@@ -63,14 +65,20 @@ export class DataService {
 
   createOrder(productosCantidad: Producto[]) {
     // Crear pedido en el que le pasamos el usuario actual
+    if (this.productosCarrito.length === 0) {
+      this.emptyCartAlert();
+      return;
+    }
     this.postToOrder().then((res) => {
       var pedidoId = res.id;
       console.log(res);
-
       productosCantidad.forEach((producto) => {
         this.postCart(producto.id, producto.cantidad, pedidoId);
       });
     });
+    this.orderSuscessAlert();
+    this.router.navigate(['/tabs/tab3']);
+    this.productosCarrito = [];
     console.log('DATAproductosPedido', this.productosPedido);
   }
 
@@ -147,4 +155,44 @@ export class DataService {
         throw error;
       });
   }
+
+  getPedidos() {
+    return fetch(this.apiUrl + 'pedido', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Token ' + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Error al cargar los pedidos');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error;
+      });
+  }
+
+  async emptyCartAlert(){
+    const alert = await this.alert.create({
+      header: 'Carrito vacio',
+      message: 'No tienes productos en el carrito',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  async orderSuscessAlert(){
+    const alert = await this.alert.create({
+      header: 'Pedido realizado',
+      message: 'Su pedido se ha realizado correctamente',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
 }
