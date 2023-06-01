@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { Producto } from '../services/interfaces/Producto';
+import { MenuController } from '@ionic/angular';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -9,13 +11,12 @@ import { Producto } from '../services/interfaces/Producto';
   styleUrls: ['./cart.page.scss'],
 })
 export class CartPage implements OnInit {
-  constructor(private router: Router, public dataService: DataService) {}
+  constructor(private router: Router, public dataService: DataService, private menuController: MenuController) {}
   products: any;
   showCart: any[] = [];
-  finalCart: Map<Producto, number> = new Map<Producto, number>();
-
+  finalCart: any;
+  totalPrice: number = 0;
   ngOnInit() {
-    console.log('productos pagina carrito', this.dataService.productosCarrito);
     this.showCart = this.calculateSameProducts();
   }
 
@@ -44,33 +45,35 @@ export class CartPage implements OnInit {
       }
     }
 
-    this.finalCart = new Map<Producto, number>(); // Reiniciar el mapa antes de actualizarlo
-
-    // Actualizar el mapa de productos finales
-    for (const product of groupedCart) {
-      this.finalCart.set(product.id, product);
-    }
+    this.finalCart = groupedCart;
 
     return groupedCart;
   }
 
-  public createOrder() {
+  public getTotalPrice() {
+    this.totalPrice=this.dataService.getTotalPrice();
+    return this.totalPrice;
+    console.log('cartPageTotal', this.totalPrice);
+  }
+
+  public async createOrder() {
     this.dataService.createOrder(this.finalCart);
-    console.log('final cart', this.finalCart);
+  }
+
+  public async openMenu(){
+    await this.menuController.open('cartMenu');
   }
 
   addProduct(producto: Producto) {
     this.dataService.addProductoCarrito(producto);
     this.showCart = this.calculateSameProducts();
     this.updateCart();
-    console.log('after add', this.dataService.productosCarrito);
   }
 
   deleteProduct(producto: Producto) {
     this.dataService.deleteProductoCarrito(producto);
     this.showCart = this.calculateSameProducts();
     this.updateCart();
-    console.log('after delete', this.dataService.productosCarrito);
   }
 
   updateCart() {
@@ -79,10 +82,7 @@ export class CartPage implements OnInit {
   }
 
   updateFinalCart() {
-    this.finalCart = new Map<Producto, number>();
-    for (const product of this.showCart) {
-      this.finalCart.set(product.id, product);
-    }
+    this.finalCart = this.showCart;
   }
 
   async cerrarSesion() {

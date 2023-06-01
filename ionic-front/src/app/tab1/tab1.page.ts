@@ -21,8 +21,6 @@ export class Tab1Page {
 
   async addProductoCarrito(producto: Producto) {
     await this.dataService.addProductoCarrito(producto);
-    console.log('producto almacenado', producto);
-    console.log('productos almacenados', this.dataService.productosCarrito);
   }
 
   async cerrarSesion() {
