@@ -11,13 +11,24 @@ import { Producto } from '../services/interfaces/Producto';
 export class Tab3Page {
   pedidos: any;
 
-  constructor(public dataService: DataService, private router: Router) {}
+  constructor(public dataService: DataService, private router: Router) {
 
-  ngOnInit(){
+  }
+
+  ngOnInit() {
+    this.dataService.getOrderHistory(1).then((productos: any) => {
+      console.log('productos', productos);
+    });
     this.dataService.getPedidos().then((pedidos: any) => {
       this.pedidos = pedidos;
-      console.log(this.pedidos);
-    }
-    );
+      console.log('pedidos', pedidos);
+    });
+  }
+
+
+
+  async cerrarSesion() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }

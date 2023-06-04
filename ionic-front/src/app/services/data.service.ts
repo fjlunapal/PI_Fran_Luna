@@ -168,7 +168,7 @@ export class DataService {
         if (res.ok) {
           return res.json();
         } else {
-          throw new Error('Error al cargar los pedidos');
+          throw new Error('Error al cargar los productos');
         }
       })
       .catch((error) => {
@@ -193,6 +193,27 @@ export class DataService {
       buttons: ['OK']
     });
     await alert.present();
+  }
+
+  getOrderHistory(pedidoId: any) {
+    return fetch(this.apiUrl + 'productoCarrito/' + pedidoId, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Token ' + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Error al cargar los productos');
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error;
+      });
   }
 
 }
