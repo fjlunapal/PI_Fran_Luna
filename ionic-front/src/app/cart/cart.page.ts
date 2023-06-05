@@ -53,7 +53,6 @@ export class CartPage implements OnInit {
   public getTotalPrice() {
     this.totalPrice=this.dataService.getTotalPrice();
     return this.totalPrice;
-    console.log('cartPageTotal', this.totalPrice);
   }
 
   public async createOrder() {

@@ -10,4 +10,21 @@
       <ion-title size="large">Pedidos recientes</ion-title>
     </ion-toolbar>
   </ion-header>
+
+  <ion-card *ngFor="let pedido of pedidos">
+    <ion-card-header>
+      <ion-card-title>{{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ng-container *ngFor="let producto of productos">
+        <ng-container *ngIf="producto.pedido === pedido.id">
+          <ion-list>
+            {{ producto.nombreProducto }} x {{ producto.cantidad }}
+          </ion-list>
+        </ng-container>
+      </ng-container>
+      <ion-card-title>Precio total: {{ getTotalPrice(pedido.id) }}</ion-card-title>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

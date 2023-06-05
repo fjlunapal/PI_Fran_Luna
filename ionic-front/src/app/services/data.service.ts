@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AlertController } from '@ionic/angular';
 import { Producto } from './interfaces/Producto';
 import { Router } from '@angular/router';
+import { get } from 'http';
 
 
 @Injectable({
@@ -125,7 +126,7 @@ export class DataService {
   
   //metodo para hacer un get a la api de los pedidos
 
-  postCart(productoId: number, cantidad: number, pedidoId: number) {
+  postCart(productoId: any, cantidad: number, pedidoId: any) {
     const order = {
       cantidad: cantidad,
       pedido: pedidoId,
@@ -156,7 +157,7 @@ export class DataService {
       });
   }
 
-  getPedidos() {
+  async getPedidos() {
     return fetch(this.apiUrl + 'pedido', {
       method: 'GET',
       headers: {
@@ -195,7 +196,7 @@ export class DataService {
     await alert.present();
   }
 
-  getOrderHistory(pedidoId: any) {
+  async getOrderHistory(pedidoId: any) {
     return fetch(this.apiUrl + 'productoCarrito/' + pedidoId, {
       method: 'GET',
       headers: {
