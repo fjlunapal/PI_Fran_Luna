@@ -4,11 +4,10 @@ import { Router } from '@angular/router';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { IonModal, ModalController } from '@ionic/angular';
 
-
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
-  styleUrls: ['tab3.page.scss']
+  styleUrls: ['tab3.page.scss'],
 })
 export class Tab3Page {
   @ViewChild(IonModal, { static: false }) public modal!: IonModal;
@@ -17,14 +16,18 @@ export class Tab3Page {
   userId: any;
   totalPedido: number = 0;
   comentario: any;
-  stars: any[] = [1, 2, 3, 4, 5]; 
-  selectedStars: number = 0; 
-  starIcon: string = 'star-outline'; 
+  stars: any[] = [1, 2, 3, 4, 5];
+  selectedStars: number = 0;
+  starIcon: string = 'star-outline';
+  starOutlineIcon: string = 'star-outline';
   isModalOpen: any;
   pedidoModal: any;
 
-
-  constructor(public dataService: DataService, private router: Router, private modalCtrl: ModalController) {
+  constructor(
+    public dataService: DataService,
+    private router: Router,
+    private modalCtrl: ModalController
+  ) {
     this.productos = [];
   }
 
@@ -74,34 +77,54 @@ export class Tab3Page {
     this.modalCtrl.dismiss();
   }
 
-  confirm() {
+  confirm(pedidoId: any) {
     this.modal.dismiss(this.comentario, 'confirmar');
-    this.router.navigate(['/tabs/tab3']);
-    
+    this.dataService.putOrderDetails(
+      pedidoId,
+      this.comentario,
+      this.selectedStars
+    );
   }
 
   onWillDismiss(event: Event) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
-
-
-    // if (ev.detail.role === 'confirm') {
-
-    // }
+    this.selectedStars = 0;
+    this.comentario = '';
   }
 
   setOpen(isOpen: boolean, pedido: any) {
     this.isModalOpen = pedido.id;
     this.pedidoModal = pedido;
   }
-  
 
-  selectStar(stars: number) {
-    this.selectedStars = stars;
+  selectStar(starCount: number) {
+    this.selectedStars = starCount;
+    console.log('stars', this.selectedStars);
+  }
 
-    if (this.selectedStars > 0) {
-      this.starIcon = 'star';
-    } else {
-      this.starIcon = 'star-outline'; 
-    }
+  //este metodo recoge los productoCarrito con el id del pedido y los vuelve a añadir al carrito
+  repetirPedido(pedido: any) {
+    this.dataService.deleteCart();
+    this.dataService.getProducts().then((productos: any) => {
+      this.productos
+        .filter((producto: any) => {
+          return producto.pedido === pedido.id;
+        })
+        .forEach((producto: any) => {
+          productos.forEach((productoApi: any) => {
+            if (productoApi.id === producto.producto) {
+            for (let i = 0; i < producto.cantidad; i++){
+              this.dataService.addProductoCarrito(productoApi);
+            }
+            }
+          });
+        });
+    });
+  }
+
+  async cerrarSesion() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+    this.dataService.productosCarrito = [];
   }
 }

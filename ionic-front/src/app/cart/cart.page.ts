@@ -18,6 +18,7 @@ export class CartPage implements OnInit {
   totalPrice: number = 0;
   ngOnInit() {
     this.showCart = this.calculateSameProducts();
+    console.log(this.showCart);
   }
 
   public calculateSameProducts(): any[] {

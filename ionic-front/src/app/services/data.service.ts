@@ -11,12 +11,15 @@ import { get } from 'http';
 })
 export class DataService {
 
+
+
   apiUrl = 'https://api-marruzella.herokuapp.com/api/';
   pedido: any;
   productosPedido: any;
   productosCarrito: Producto[] = [];
   userId: any;
   totalPrice: number = 0;
+  
   constructor(private http: HttpClient, public alert: AlertController, private router: Router) {
     this.userId = localStorage.getItem('userId');
   }
@@ -158,8 +161,37 @@ export class DataService {
       });
   }
 
+  //Borrar el carrito
+  deleteCart() {
+    this.productosCarrito = [];
+  }
+
   async getPedidos() {
     return fetch(this.apiUrl + 'pedido', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Token ' + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Error al cargar los productos');
+        }
+      })
+      .then((pedidos) => {
+        return pedidos.reverse();
+      })
+      .catch((error) => {
+        console.error(error);
+        throw error;
+      });
+  }
+
+  getPedido(id: any) {
+    return fetch(this.apiUrl + 'pedido/' + id, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -218,6 +250,60 @@ export class DataService {
       });
   }
 
+  //this method makes put to /api/pedido/*/ and modifies comentario and valoracion from a pedido
+  async putOrderDetails(pedidoId: any, comentario: any, valoracion: any){
+    const details = {
+      usuario: this.userId,
+      comentario: comentario,
+      valoracion: valoracion
+    };
+    console.log('Datos a enviar:', details);
+    return fetch(this.apiUrl + 'pedido/' + pedidoId + '/', {
+      method: 'PUT',
+      body: JSON.stringify(details),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Token ' + localStorage.getItem('token'),
+      },
+    })
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        } else {
+          throw new Error('Error al modificar el pedido');
+        }
+      })
+      .then((data) => {
+        this.successAlert();
+        this.router.navigate(['/tabs/tab3']);
+        return data;
+      })
+      .catch((error) => {
+        console.error(error);
+        this.errorAlert();
+        throw error;
+      });
+  }
   
+  async successAlert() {
+    const alert = await this.alert.create({
+      header: '¡Gracias por tu opinión!',
+      message: 'Tu opinión ha sido enviada correctamente.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+  
+  async errorAlert() {
+    const alert = await this.alert.create({
+      header: 'Error al enviar tu opinión',
+      message: 'Ha habido un error al enviar tu opinión. Por favor, inténtalo de nuevo.',
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+  
+
+
 
 }
