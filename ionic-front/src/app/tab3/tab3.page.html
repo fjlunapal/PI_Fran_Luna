@@ -5,6 +5,11 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="handleRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <p class="refresh-text">Desliza hacia abajo para refrescar</p>
   <ion-header collapse="condense">
     <ion-toolbar>
       <ion-title size="large">Pedidos recientes</ion-title>
@@ -13,18 +18,42 @@
 
   <ion-card *ngFor="let pedido of pedidos">
     <ion-card-header>
-      <ion-card-title>{{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}</ion-card-title>
+      <ion-card-title>{{ pedido.fecha | date: 'dd/MM/yyyy' }}</ion-card-title>
     </ion-card-header>
-
     <ion-card-content>
       <ng-container *ngFor="let producto of productos">
         <ng-container *ngIf="producto.pedido === pedido.id">
           <ion-list>
-            {{ producto.nombreProducto }} x {{ producto.cantidad }}
+            {{ producto.nombreProducto }} x {{ producto.cantidad }}: {{ producto.precioProducto * producto.cantidad }} €
           </ion-list>
         </ng-container>
       </ng-container>
-      <ion-card-title>Precio total: {{ getTotalPrice(pedido.id) }}</ion-card-title>
+      <ion-card-title>Precio total: {{ calcularPrecioTotal(pedido.id) }} €</ion-card-title>
     </ion-card-content>
+  <ion-button expand="block" (click)="setOpen(true, pedido)">Detalles</ion-button>
+  <ion-modal [isOpen]="isModalOpen===pedido.id" (willDismiss)="onWillDismiss($event)">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar color="primary">
+            <ion-buttons slot="start">
+              <ion-button (click)="cancel()">Cancelar</ion-button>
+            </ion-buttons>
+            <ion-title class="ion-text-center">{{pedido.fecha | date: 'dd/MM/yyyy'}}</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="confirm()" >Guardar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Cúentanos más sobre tu pedido!</ion-label>
+            <ion-textarea [(ngModel)]="comentario"></ion-textarea>
+          </ion-item>       
+          <ion-item class="star-rating ion-text-center">
+            <ion-icon *ngFor="let star of stars; let i = index" [name]="starIcon" [class.filled]="i < selectedStars" (click)="selectStar(i + 1)"></ion-icon>
+          </ion-item>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </ion-card>
 </ion-content>
