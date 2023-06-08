@@ -21,12 +21,13 @@ export class Tab3Page {
   starIcon: string = 'star-outline';
   starOutlineIcon: string = 'star-outline';
   isModalOpen: any;
-  pedidoModal: any;  
+  pedidoModal: any;
 
   constructor(
     public dataService: DataService,
     private router: Router,
-    private modalCtrl: ModalController  ) {
+    private modalCtrl: ModalController
+  ) {
     this.productos = [];
   }
 
@@ -112,9 +113,9 @@ export class Tab3Page {
         .forEach((producto: any) => {
           productos.forEach((productoApi: any) => {
             if (productoApi.id === producto.producto) {
-            for (let i = 0; i < producto.cantidad; i++){
-              this.dataService.addProductoCarrito(productoApi);
-            }
+              for (let i = 0; i < producto.cantidad; i++) {
+                this.dataService.addProductoCarrito(productoApi);
+              }
             }
           });
         });

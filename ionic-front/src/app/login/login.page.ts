@@ -4,7 +4,6 @@ import {
   FormControl,
   Validators,
   FormBuilder,
-  Form,
 } from '@angular/forms';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
@@ -17,6 +16,7 @@ import { Router } from '@angular/router';
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
+
   constructor(
     public fb: FormBuilder,
     public alertController: AlertController,
@@ -31,21 +31,37 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {}
 
-  //method to login
   async login() {
-    var f = this.loginForm.value;
+    if (this.loginForm.invalid) {
+      this.emptyAlert();
+      return;
+    }
 
+    var f = this.loginForm.value;
     console.log('datos enviados', this.loginForm.value);
-    this.authService.login(f.email, f.password).then((f) => {
-      +console.log(f);
-      if (this.loginForm.invalid) {
-        console.log('datos enviados', this.loginForm.value);
-      } else {
-        localStorage.setItem('token', f.access_token);
-        localStorage.setItem('userId', f.userId);
-        console.log('userId', f.userId);
+
+    this.authService
+      .login(f.email, f.password)
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem('token', response.access_token);
+        localStorage.setItem('userId', response.userId);
+        console.log('userId', response.userId);
         this.router.navigate(['/tabs']);
-      }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async emptyAlert() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message: 'Debes rellenar todos los campos.',
+      buttons: ['Aceptar'],
     });
+
+    await alert.present();
+    return;
   }
 }

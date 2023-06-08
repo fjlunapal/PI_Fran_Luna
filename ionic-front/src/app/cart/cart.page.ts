@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { DataService } from '../services/data.service';
 import { Producto } from '../services/interfaces/Producto';
 import { MenuController } from '@ionic/angular';
-import { AuthService } from '../services/auth.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import { StyleDictionary } from 'pdfmake/interfaces';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { ToastController } from '@ionic/angular';
+import { AlertController } from '@ionic/angular';
+import { EmailComposer } from '@awesome-cordova-plugins/email-composer/ngx';
 
 interface CustomStyles {
   [key: string]: {
@@ -29,6 +29,8 @@ export class CartPage implements OnInit {
     public dataService: DataService,
     private menuController: MenuController,
     private toastController: ToastController,
+    private alertController: AlertController,
+    private emailComposer: EmailComposer
   ) {
     (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
   }
@@ -113,55 +115,60 @@ export class CartPage implements OnInit {
   }
 
   async generatePdf() {
-    console.log('entraenpdf');
+    if (this.finalCart.length === 0) {
+      return;
+    }
+
     const content: any[] = [];
 
-    // Encabezado
-    content.push({ text: 'Resumen del Pedido', style: 'header' });
-    content.push('\n'); // Espacio en blanco
+    content.push({ text: 'MARRUZELLA', style: 'header' });
+    content.push('Teléfono: 956 34 50 72');
+    content.push('\n');
 
-    // Información del pedido
+    content.push({ text: 'Resumen del Pedido', style: 'header' });
+    content.push('\n');
+
     const orderSummary: any[] = [];
     let totalPrice = 0;
 
     this.finalCart.forEach((item: any) => {
       const { nombre, cantidad, precioTotal } = item;
-      const itemSummary = `${nombre} x ${cantidad}: ${precioTotal.toFixed(2)} €`;
+      const itemSummary = `${nombre} x ${cantidad}: ${precioTotal.toFixed(
+        2
+      )} €`;
       orderSummary.push(itemSummary);
       totalPrice += precioTotal;
     });
 
-    // Agregar resumen de artículos al contenido del PDF
     content.push({ text: 'Productos:', style: 'subheader' });
     orderSummary.forEach((item: any) => {
       content.push('- ' + item);
     });
 
-    // Total
-    content.push('\n'); // Espacio en blanco
+    content.push('\n');
     content.push({ text: `Total: ${totalPrice.toFixed(2)} €`, style: 'total' });
 
     const documentDefinition = {
       content: content,
       defaultStyle: {
-        fontSize: 12
+        fontSize: 12,
       },
       styles: {
         header: {
           fontSize: 18,
-          bold: true
+          bold: true,
         },
         subheader: {
           fontSize: 14,
           bold: true,
-          margin: [0, 15, 0, 5] // Margen superior, derecho, inferior, izquierdo
+          margin: [0, 15, 0, 5],
         },
         total: {
           fontSize: 16,
           bold: true,
-          margin: [0, 30, 0, 0] // Margen superior, derecho, inferior, izquierdo
-        }
-      } as CustomStyles // Utilizamos el tipo personalizado
+          margin: [0, 30, 0, 0],
+        },
+      } as CustomStyles,
     };
 
     try {
@@ -177,17 +184,27 @@ export class CartPage implements OnInit {
             path: 'pedido.pdf',
             data: base64Data,
             directory: Directory.Documents,
-            recursive: true
+            recursive: true,
           });
 
           console.log('PDF guardado:', result.uri);
-
-          // Muestra un mensaje de éxito utilizando ToastController
           const toast = await this.toastController.create({
             message: 'El PDF se guardó exitosamente en el dispositivo.',
-            duration: 2000
+            duration: 2000,
           });
           toast.present();
+
+          // Configurar el correo electrónico
+          const email = {
+            attachments: [result.uri],
+            subject: 'Resumen del pedido',
+            body: 'Adjunto encontrarás el PDF del pedido.',
+            isHtml: true,
+            app: 'Gmail',
+          };
+
+          // Enviar el correo electrónico
+          this.emailComposer.open(email);
         };
 
         reader.readAsBinaryString(blob);
@@ -196,6 +213,4 @@ export class CartPage implements OnInit {
       console.error('Error al generar o guardar el PDF:', error);
     }
   }
-
- 
 }

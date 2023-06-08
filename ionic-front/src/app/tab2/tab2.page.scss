@@ -1,0 +1,10 @@
+.content-wrapper {
+  margin-top: 1px;
+  padding-bottom: 20px;
+}
+
+ion-searchbar.sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

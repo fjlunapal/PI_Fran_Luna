@@ -39,10 +39,16 @@
           </ion-list>
         </ng-container>
       </ng-container>
-      <ion-card-title>Precio total: {{ calcularPrecioTotal(pedido.id) }} €</ion-card-title>
+      <ion-card-title
+        >Precio total: {{ calcularPrecioTotal(pedido.id) }} €</ion-card-title
+      >
       <div class="button-container">
-        <ion-button expand="block" (click)="setOpen(true, pedido)">Valorar</ion-button>
-        <ion-button expand="block" (click)="repetirPedido(pedido)">Repetir</ion-button>
+        <ion-button expand="block" (click)="setOpen(true, pedido)"
+          >Valorar</ion-button
+        >
+        <ion-button expand="block" (click)="repetirPedido(pedido)"
+          >Repetir</ion-button
+        >
       </div>
     </ion-card-content>
     <ion-modal
@@ -60,21 +66,12 @@
                 >
               </ion-button>
             </ion-buttons>
-            <ion-title class="ion-text-center"
-              >{{ pedido.fecha | date: 'dd/MM/yyyy' }}</ion-title
-            >
             <ion-buttons slot="end">
               <ion-button
                 expand="block"
                 *ngIf="!pedido.valoracion"
                 (click)="confirm(pedido.id)"
                 >Guardar</ion-button
-              >
-              <ion-button
-                expand="block"
-                *ngIf="pedido.valoracion"
-                (click)="cancel()"
-                >Aceptar</ion-button
               >
             </ion-buttons>
           </ion-toolbar>

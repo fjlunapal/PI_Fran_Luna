@@ -38,7 +38,7 @@ export class Tab2Page {
       this.filterProducts = [];
     }
   }
-  
+
   async addProductoCarrito(producto: Producto) {
     await this.dataService.addProductoCarrito(producto);
     console.log('producto almacenado', producto);

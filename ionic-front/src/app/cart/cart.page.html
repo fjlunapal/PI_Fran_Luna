@@ -8,7 +8,7 @@
     <ion-title class="ion-text-center">MARRUZELLA</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openMenu()">
-        <ion-icon name="basket-outline"></ion-icon>      
+        <ion-icon name="basket-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -49,17 +49,18 @@
   </ion-content>
 </ion-menu>
 
-
-
-
 <ion-content [fullscreen]="true" id="mainContent">
   <ng-container *ngIf="showCart.length > 0; else emptyCart">
     <ng-container *ngFor="let product of showCart">
       <ion-card>
         <img alt="test" src="{{ product.imagen }}" />
         <ion-card-header>
-          <ion-card-title>{{product.cantidad}} x {{ product.nombre }}</ion-card-title>
-          <ion-card-title class="price">{{ product.precioTotal }} €</ion-card-title>
+          <ion-card-title
+            >{{product.cantidad}} x {{ product.nombre }}</ion-card-title
+          >
+          <ion-card-title class="price"
+            >{{ product.precioTotal }} €</ion-card-title
+          >
           <div class="button-group">
             <ion-button (click)="deleteProduct(product)">
               <ion-icon name="close-circle-outline"></ion-icon>
@@ -68,7 +69,6 @@
               <ion-icon name="add-circle-outline"></ion-icon>
             </ion-button>
           </div>
-
         </ion-card-header>
       </ion-card>
     </ng-container>

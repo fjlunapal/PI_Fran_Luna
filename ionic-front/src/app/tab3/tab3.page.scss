@@ -1,52 +1,47 @@
 .refresh-text {
-    text-align: center;
-    font-size: 16px;
-    margin-top: 10px;
-    color: #999;
+  text-align: center;
+  font-size: 16px;
+  margin-top: 10px;
+  color: #999;
+}
+
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+  ion-icon {
+    font-size: 30px;
+    color: gray;
+    cursor: pointer;
+    margin: 0 5px; 
   }
-  
-  .star-rating {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px; /* Espacio entre el texto superior y las estrellas */
-  
-    ion-icon {
-      font-size: 30px; /* Tamaño de las estrellas */
+
+  ion-icon.filled {
+    color: gold;
+  }
+
+  ion-icon.yellow {
+    animation: fillStar 1s forwards;
+  }
+
+  @keyframes fillStar {
+    0% {
       color: gray;
-      cursor: pointer;
-      margin: 0 5px; /* Espacio horizontal entre las estrellas */
     }
-  
-    ion-icon.filled {
+    100% {
       color: gold;
     }
-  
-    ion-icon.yellow {
-      animation: fillStar 1s forwards;
-    }
-  
-    @keyframes fillStar {
-      0% {
-        color: gray;
-      }
-      100% {
-        color: gold;
-      }
-    }
   }
-  
-  .button-container {
-    display: flex;
-  }
-  
-  .button-container ion-button {
-    flex: 1;
-  }
-  .button-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-  }
-    
-  
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.button-container ion-button {
+  flex: 1;
+}
