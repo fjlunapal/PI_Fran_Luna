@@ -21,13 +21,12 @@ export class Tab3Page {
   starIcon: string = 'star-outline';
   starOutlineIcon: string = 'star-outline';
   isModalOpen: any;
-  pedidoModal: any;
+  pedidoModal: any;  
 
   constructor(
     public dataService: DataService,
     private router: Router,
-    private modalCtrl: ModalController
-  ) {
+    private modalCtrl: ModalController  ) {
     this.productos = [];
   }
 

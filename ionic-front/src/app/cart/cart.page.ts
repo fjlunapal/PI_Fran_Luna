@@ -4,6 +4,9 @@ import { DataService } from '../services/data.service';
 import { Producto } from '../services/interfaces/Producto';
 import { MenuController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { StyleDictionary } from 'pdfmake/interfaces';
 
 @Component({
   selector: 'app-cart',
@@ -11,11 +14,17 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./cart.page.scss'],
 })
 export class CartPage implements OnInit {
-  constructor(private router: Router, public dataService: DataService, private menuController: MenuController) {}
+  constructor(
+    private router: Router,
+    public dataService: DataService,
+    private menuController: MenuController
+  ) {}
+
   products: any;
   showCart: any[] = [];
   finalCart: any;
   totalPrice: number = 0;
+
   ngOnInit() {
     this.showCart = this.calculateSameProducts();
     console.log(this.showCart);
@@ -52,7 +61,7 @@ export class CartPage implements OnInit {
   }
 
   public getTotalPrice() {
-    this.totalPrice=this.dataService.getTotalPrice();
+    this.totalPrice = this.dataService.getTotalPrice();
     return this.totalPrice;
   }
 
@@ -60,7 +69,7 @@ export class CartPage implements OnInit {
     this.dataService.createOrder(this.finalCart);
   }
 
-  public async openMenu(){
+  public async openMenu() {
     await this.menuController.open('cartMenu');
   }
 
@@ -89,4 +98,62 @@ export class CartPage implements OnInit {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
+
+  generatePdf() {
+    console.log('entraenpdf');
+    const content: any[] = [];
+  
+    // Encabezado
+    content.push({ text: 'Resumen del Pedido', style: 'header' });
+    content.push('\n'); // Espacio en blanco
+  
+    // Información del pedido
+    const orderSummary: any[] = [];
+    let totalPrice = 0;
+  
+    this.finalCart.forEach((item: any) => {
+      const { nombre, cantidad, precioTotal } = item;
+      const itemSummary = `${nombre} x ${cantidad}: ${precioTotal.toFixed(2)} €`;
+      orderSummary.push(itemSummary);
+      totalPrice += precioTotal;
+    });
+  
+    // Agregar resumen de artículos al contenido del PDF
+    content.push({ text: 'Productos:', style: 'subheader' });
+    orderSummary.forEach((item: any) => {
+      content.push('- ' + item);
+    });
+  
+    // Total
+    content.push('\n'); // Espacio en blanco
+    content.push({ text: `Total: ${totalPrice.toFixed(2)} €`, style: 'total' } );
+  
+    const documentDefinition = {
+      content: content,
+      defaultStyle: {
+        fontSize: 12
+      },
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true
+        },
+        subheader: {
+          fontSize: 14,
+          bold: true,
+          margin: [0, 15, 0, 5] // Margen superior, derecho, inferior, izquierdo
+        },
+        total: {
+          fontSize: 16,
+          bold: true,
+          margin: [0, 30, 0, 0] // Margen superior, derecho, inferior, izquierdo
+        }
+      } as StyleDictionary
+    };
+         
+  
+    console.log('pdf', documentDefinition);
+    pdfMake.createPdf(documentDefinition, {}, undefined, pdfFonts.pdfMake.vfs).open();    
+  }
+  
 }
