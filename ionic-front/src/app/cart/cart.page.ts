@@ -7,6 +7,16 @@ import { AuthService } from '../services/auth.service';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { StyleDictionary } from 'pdfmake/interfaces';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { ToastController } from '@ionic/angular';
+
+interface CustomStyles {
+  [key: string]: {
+    fontSize: number;
+    bold?: boolean;
+    margin?: [number, number, number, number];
+  };
+}
 
 @Component({
   selector: 'app-cart',
@@ -17,8 +27,11 @@ export class CartPage implements OnInit {
   constructor(
     private router: Router,
     public dataService: DataService,
-    private menuController: MenuController
-  ) {}
+    private menuController: MenuController,
+    private toastController: ToastController,
+  ) {
+    (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
+  }
 
   products: any;
   showCart: any[] = [];
@@ -99,35 +112,35 @@ export class CartPage implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  generatePdf() {
+  async generatePdf() {
     console.log('entraenpdf');
     const content: any[] = [];
-  
+
     // Encabezado
     content.push({ text: 'Resumen del Pedido', style: 'header' });
     content.push('\n'); // Espacio en blanco
-  
+
     // Información del pedido
     const orderSummary: any[] = [];
     let totalPrice = 0;
-  
+
     this.finalCart.forEach((item: any) => {
       const { nombre, cantidad, precioTotal } = item;
       const itemSummary = `${nombre} x ${cantidad}: ${precioTotal.toFixed(2)} €`;
       orderSummary.push(itemSummary);
       totalPrice += precioTotal;
     });
-  
+
     // Agregar resumen de artículos al contenido del PDF
     content.push({ text: 'Productos:', style: 'subheader' });
     orderSummary.forEach((item: any) => {
       content.push('- ' + item);
     });
-  
+
     // Total
     content.push('\n'); // Espacio en blanco
-    content.push({ text: `Total: ${totalPrice.toFixed(2)} €`, style: 'total' } );
-  
+    content.push({ text: `Total: ${totalPrice.toFixed(2)} €`, style: 'total' });
+
     const documentDefinition = {
       content: content,
       defaultStyle: {
@@ -148,12 +161,41 @@ export class CartPage implements OnInit {
           bold: true,
           margin: [0, 30, 0, 0] // Margen superior, derecho, inferior, izquierdo
         }
-      } as StyleDictionary
+      } as CustomStyles // Utilizamos el tipo personalizado
     };
-         
-  
-    console.log('pdf', documentDefinition);
-    pdfMake.createPdf(documentDefinition, {}, undefined, pdfFonts.pdfMake.vfs).open();    
+
+    try {
+      const pdfDocGenerator = pdfMake.createPdf(documentDefinition);
+
+      pdfDocGenerator.getBlob(async (blob: Blob) => {
+        const reader = new FileReader();
+
+        reader.onloadend = async () => {
+          const base64Data = btoa(reader.result as string);
+
+          const result = await Filesystem.writeFile({
+            path: 'pedido.pdf',
+            data: base64Data,
+            directory: Directory.Documents,
+            recursive: true
+          });
+
+          console.log('PDF guardado:', result.uri);
+
+          // Muestra un mensaje de éxito utilizando ToastController
+          const toast = await this.toastController.create({
+            message: 'El PDF se guardó exitosamente en el dispositivo.',
+            duration: 2000
+          });
+          toast.present();
+        };
+
+        reader.readAsBinaryString(blob);
+      });
+    } catch (error) {
+      console.error('Error al generar o guardar el PDF:', error);
+    }
   }
-  
+
+ 
 }
